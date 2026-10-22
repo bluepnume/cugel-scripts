@@ -7,7 +7,7 @@ import type { PublicEntry } from '../../scripts';
 import type { CliContext } from '../context';
 
 import { deadCodeEslintConfig } from '../../eslint';
-import { binPath, listSources, run, runOrThrow } from '../../lib';
+import { binPath, listSources, materializeKnipConfig, run, runOrThrow } from '../../lib';
 import { findDeadExports } from '../../scripts';
 import { hasFlag } from '../context';
 
@@ -63,11 +63,19 @@ export type ToolRunOptions = {
 };
 
 export const runKnip = async ({ root, fix = false, tolerate } : ToolRunOptions) : Promise<boolean> => {
-    const result = await run({
-        command: binPath({ root, name: 'knip' }),
-        args:    knipArgs({ fix }),
-        cwd:     root
-    });
+    const config = await materializeKnipConfig({ root });
+
+    let result;
+
+    try {
+        result = await run({
+            command: binPath({ root, name: 'knip' }),
+            args:    [ ...config.args, ...knipArgs({ fix }) ],
+            cwd:     root
+        });
+    } finally {
+        await config.cleanup();
+    }
 
     if (!tolerate && result.code !== 0) {
         throw new Error(`knip failed with exit code ${ result.code }`);
@@ -229,16 +237,22 @@ export const deadCommand = async ({ root, args, log } : CliContext) : Promise<vo
 // Unused and unlisted dependencies, via knip.
 export const deadDepsCommand = async ({ root, args } : CliContext) : Promise<void> => {
     const fix = hasFlag({ args, flag: '--fix' });
+    const config = await materializeKnipConfig({ root });
 
-    await runOrThrow({
-        name:    'knip (dependencies)',
-        command: binPath({ root, name: 'knip' }),
-        args:    [
-            ...fix
-                ? [ '--fix' ]
-                : [],
-            '--include', 'dependencies,unlisted'
-        ],
-        cwd: root
-    });
+    try {
+        await runOrThrow({
+            name:    'knip (dependencies)',
+            command: binPath({ root, name: 'knip' }),
+            args:    [
+                ...config.args,
+                ...fix
+                    ? [ '--fix' ]
+                    : [],
+                '--include', 'dependencies,unlisted'
+            ],
+            cwd: root
+        });
+    } finally {
+        await config.cleanup();
+    }
 };

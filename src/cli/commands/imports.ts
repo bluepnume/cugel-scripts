@@ -4,7 +4,7 @@ import path from 'node:path';
 
 import type { CliContext } from '../context';
 
-import { binPath, runOrThrow } from '../../lib';
+import { binPath, importSorterConfigArgs, runOrThrow } from '../../lib';
 import { addMissingImports } from '../../scripts';
 import { changedSources } from '../changed';
 import { hasFlag, positionals } from '../context';
@@ -51,7 +51,7 @@ export const importsCommand = async ({ root, args, log } : CliContext) : Promise
             await runOrThrow({
                 name:    'format-imports',
                 command: binPath({ root, name: 'format-imports' }),
-                args:    [ target ],
+                args:    [ ...importSorterConfigArgs({ root }), target ],
                 cwd:     root
             });
         }
@@ -62,7 +62,7 @@ export const importsCommand = async ({ root, args, log } : CliContext) : Promise
     await runOrThrow({
         name:    'format-imports --check',
         command: binPath({ root, name: 'format-imports' }),
-        args:    [ '--check', ...targets ],
+        args:    [ '--check', ...importSorterConfigArgs({ root }), ...targets ],
         cwd:     root
     });
 };
