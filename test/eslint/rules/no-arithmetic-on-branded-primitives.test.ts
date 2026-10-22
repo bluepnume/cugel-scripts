@@ -7,7 +7,7 @@ import { noArithmeticOnBrandedPrimitives } from '../../../src/eslint/rules/no-ar
 import parser from '@typescript-eslint/parser';
 
 const tsconfigRootDir = resolve(import.meta.dirname, '../../..');
-const filename = resolve(tsconfigRootDir, 'src/index.ts');
+const filename = resolve(tsconfigRootDir, 'rule-under-test.ts');
 
 const ruleTester = new RuleTester({
     languageOptions: {
@@ -15,7 +15,13 @@ const ruleTester = new RuleTester({
         parser,
 
         parserOptions: {
-            project: './tsconfig.json',
+            // A default project (one file plus the libs) is the supported way
+            // to type-check RuleTester snippets, and behaves the same on
+            // every platform, unlike substituting a real project file.
+            projectService: {
+                allowDefaultProject: [ '*.ts' ],
+                defaultProject:      'tsconfig.json'
+            },
             tsconfigRootDir
         }
     }
