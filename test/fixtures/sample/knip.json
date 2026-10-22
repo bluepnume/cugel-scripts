@@ -1,0 +1,6 @@
+{
+    "entry": [ "src/index.ts", "test/**/*.test.ts", "eslint.config.ts", "vitest.config.ts" ],
+    "project": [ "src/**/*.ts", "test/**/*.ts" ],
+    "exclude": [ "enumMembers", "duplicates", "binaries", "dependencies", "unlisted" ],
+    "ignoreExportsUsedInFile": true
+}

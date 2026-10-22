@@ -1,0 +1,10 @@
+{
+    "name": "sample",
+    "version": "0.0.0",
+    "private": true,
+    "type": "module",
+    "sideEffects": false,
+    "exports": {
+        ".": { "types": "./dist/src/index.d.ts", "import": "./dist/src/index.js" }
+    }
+}

@@ -1,0 +1,50 @@
+{
+    "maxLineLength": 120,
+    "trailingComma": "none",
+    "tabSize": 4,
+    "excludeGlob": [
+        "**/*.js"
+    ],
+    "wrappingStyle": {
+        "maxBindingNamesPerLine": 0,
+        "maxNamesPerWrappedLine": 5,
+        "maxExportNamesPerLine": 5
+    },
+    "groupRules": [
+        {
+            "builtin": true
+        },
+        {
+            "regex": "^[a-zA-Z]",
+            "importType": true
+        },
+        {
+            "regex": "^[a-zA-Z]",
+            "importType": false
+        },
+        {
+            "regex": "/(constants|config)",
+            "importType": true
+        },
+        {
+            "regex": "/(constants|config)",
+            "importType": false
+        },
+        {
+            "regex": "^\\.\\./",
+            "importType": true
+        },
+        {
+            "regex": "^\\.\\./",
+            "importType": false
+        },
+        {
+            "regex": "^\\./",
+            "importType": true
+        },
+        {
+            "regex": "^\\./",
+            "importType": false
+        }
+    ]
+}

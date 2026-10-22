@@ -1,0 +1,6 @@
+{
+    "extends": "__CUGEL_ROOT__/tsconfig/node.json",
+    "compilerOptions": { "rootDir": "./", "types": [ "node", "vitest/globals" ] },
+    "include": [ "src/**/*.ts", "test/**/*.ts" ],
+    "exclude": [ "node_modules", "dist", "coverage" ]
+}

@@ -1,0 +1,26 @@
+name: Dependency drift
+
+# Installs from the declared ranges instead of the lockfile, so a dependency
+# release that breaks the ranges shows up here before a consumer hits it.
+on:
+  schedule:
+    - cron: '0 14 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - run: rm -f package-lock.json
+      - run: npm install
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:static
+      - run: npm run test:coverage
+      - run: npm run build
